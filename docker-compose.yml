@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: develop
+    volumes:
+      - type: bind
+        source: "."
+        target: "/app"
+      - /app/target
+    healthcheck:
+      test: "curl -f http://localhost:8080"
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    ports:
+      - 8080:8080
+    tty: true
