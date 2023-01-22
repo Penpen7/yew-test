@@ -13,9 +13,8 @@ RUN cargo chef cook --recipe-path recipe.json
 FROM rust:1.66.0-buster as develop
 WORKDIR /app
 RUN rustup target add wasm32-unknown-unknown
-RUN cargo install --locked trunk
 RUN rustup component add clippy rustfmt
-RUN cargo install --locked cargo-watch
+RUN cargo install --locked trunk cargo-watch wasm-bindgen-cli
 COPY --from=cacher /app/target target
 CMD trunk serve --address 0.0.0.0 --port=8080
 
