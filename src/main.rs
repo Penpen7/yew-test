@@ -15,10 +15,21 @@ fn App() -> Html {
         },
     ];
     let todos = use_state(|| todo_list);
+    let on_add = {
+        let todos = todos.clone();
+        Callback::from(move |title: String| {
+            let mut newtodos = (*todos).clone();
+            newtodos.push(TodoModel {
+                title,
+                has_done: false,
+            });
+            todos.set(newtodos)
+        })
+    };
     html! {
         <>
             <Header/>
-            <InputArea on_add={let todos = todos.clone();Callback::from(move |e:MouseEvent| {let mut newtodos = (*todos).clone(); newtodos.append(TodoModel{title:x, has_done:false});todos.set(newtodos);})}/>
+            <InputArea on_add={on_add}/>
             <TodoList todos={(*todos).clone()}/>
         </>
     }
@@ -33,7 +44,7 @@ fn Header() -> Html {
 
 #[derive(Properties, PartialEq, Clone)]
 struct InputAreaProps {
-    on_add: Callback<MouseEvent>,
+    on_add: Callback<String>,
 }
 
 #[function_component]
@@ -50,11 +61,12 @@ fn InputArea(props: &InputAreaProps) -> Html {
             }
         })
     };
+    let on_add = props.on_add.clone();
 
     html! {
         <>
             <input type="text" value={(*title).clone()} onchange={on_changed}/>
-            <button onclick={props.on_add.clone()}>{"追加する"}</button>
+            <button onclick={move|_:MouseEvent| on_add.emit((*title).clone())}>{"追加する"}</button>
         </>
     }
 }
