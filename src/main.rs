@@ -118,7 +118,12 @@ fn TodoListItem(props: &TodoListItemProps) -> Html {
             }
         })
     };
-    html! { <li><input type="checkbox" checked={*is_checked} onchange={on_changed}/>{props.title.clone()}</li>}
+    html! {
+        <li>
+            <input type="checkbox" checked={*is_checked} onchange={on_changed}/>
+            {props.title.clone()}
+        </li>
+    }
 }
 
 fn main() {
