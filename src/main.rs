@@ -4,6 +4,11 @@ use yew::prelude::*;
 
 #[function_component]
 fn App() -> Html {
+    html! {<TemplateViewTodoList/>}
+}
+
+#[function_component]
+fn TemplateViewTodoList() -> Html {
     let todo_list = vec![
         TodoModel {
             title: "ご飯を食べる".to_string(),
