@@ -4,7 +4,24 @@ use yew::prelude::*;
 
 #[function_component]
 fn App() -> Html {
-    html! { <><Header/><InputArea/><TodoList/></> }
+    let todo_list = vec![
+        TodoModel {
+            title: "ご飯を食べる".to_string(),
+            has_done: false,
+        },
+        TodoModel {
+            title: "薬を飲む".to_string(),
+            has_done: true,
+        },
+    ];
+    let todos = use_state(|| todo_list);
+    html! {
+        <>
+            <Header/>
+            <InputArea on_add={let todos = todos.clone();Callback::from(move |e:MouseEvent| {let mut newtodos = (*todos).clone(); newtodos.append(TodoModel{title:x, has_done:false});todos.set(newtodos);})}/>
+            <TodoList todos={(*todos).clone()}/>
+        </>
+    }
 }
 
 #[function_component]
@@ -15,7 +32,9 @@ fn Header() -> Html {
 }
 
 #[derive(Properties, PartialEq, Clone)]
-struct InputAreaProps {}
+struct InputAreaProps {
+    on_add: Callback<MouseEvent>,
+}
 
 #[function_component]
 fn InputArea(props: &InputAreaProps) -> Html {
@@ -34,31 +53,28 @@ fn InputArea(props: &InputAreaProps) -> Html {
 
     html! {
         <>
-            <input type="text" value={(*title).clone()} onchange={on_changed}/><button>{"追加する"}</button>
+            <input type="text" value={(*title).clone()} onchange={on_changed}/>
+            <button onclick={props.on_add.clone()}>{"追加する"}</button>
         </>
     }
 }
 
+#[derive(Clone, PartialEq)]
 struct TodoModel {
     pub title: String,
     pub has_done: bool,
 }
 
+#[derive(Properties, PartialEq, Clone)]
+struct TodoListProps {
+    todos: Vec<TodoModel>,
+}
+
 #[function_component]
-fn TodoList() -> Html {
-    let todo_list = vec![
-        TodoModel {
-            title: "ご飯を食べる".to_string(),
-            has_done: false,
-        },
-        TodoModel {
-            title: "薬を飲む".to_string(),
-            has_done: true,
-        },
-    ];
+fn TodoList(props: &TodoListProps) -> Html {
     html! {
         <ul>
-        {todo_list.iter().map(|x| html!{
+        {props.todos.iter().map(|x| html!{
            <TodoListItem title={x.title.clone()} is_checked={x.has_done}/>
        }).collect::<Html>()}
         </ul>
