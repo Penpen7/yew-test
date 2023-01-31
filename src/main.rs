@@ -9,17 +9,7 @@ fn App() -> Html {
 
 #[function_component]
 fn TemplateViewTodoList() -> Html {
-    let todo_list = vec![
-        TodoModel {
-            title: "ご飯を食べる".to_string(),
-            has_done: false,
-        },
-        TodoModel {
-            title: "薬を飲む".to_string(),
-            has_done: true,
-        },
-    ];
-    let todos = use_state(|| todo_list);
+    let todos = use_state(Vec::<TodoModel>::new);
     let on_add = {
         let todos = todos.clone();
         Callback::from(move |title: String| {
@@ -28,7 +18,7 @@ fn TemplateViewTodoList() -> Html {
                 title,
                 has_done: false,
             });
-            todos.set(newtodos)
+            todos.set(newtodos);
         })
     };
     html! {
@@ -47,7 +37,7 @@ fn Header() -> Html {
     }
 }
 
-#[derive(Properties, PartialEq, Clone)]
+#[derive(Properties, PartialEq)]
 struct InputAreaProps {
     on_add: Callback<String>,
 }
@@ -58,6 +48,7 @@ fn InputArea(props: &InputAreaProps) -> Html {
     let on_changed = {
         let title = title.clone();
         Callback::from(move |e: Event| {
+            e.prevent_default();
             let input = e
                 .target()
                 .and_then(|t| t.dyn_into::<HtmlInputElement>().ok());
@@ -76,13 +67,13 @@ fn InputArea(props: &InputAreaProps) -> Html {
     }
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 struct TodoModel {
     pub title: String,
     pub has_done: bool,
 }
 
-#[derive(Properties, PartialEq, Clone)]
+#[derive(Properties, PartialEq, Debug)]
 struct TodoListProps {
     todos: Vec<TodoModel>,
 }
@@ -98,7 +89,7 @@ fn TodoList(props: &TodoListProps) -> Html {
     }
 }
 
-#[derive(Properties, PartialEq, Clone)]
+#[derive(Properties, PartialEq, Debug)]
 struct TodoListItemProps {
     pub title: String,
     pub is_checked: bool,
@@ -110,6 +101,7 @@ fn TodoListItem(props: &TodoListItemProps) -> Html {
     let on_changed = {
         let is_checked = is_checked.clone();
         Callback::from(move |e: Event| {
+            e.prevent_default();
             let input = e
                 .target()
                 .and_then(|t| t.dyn_into::<HtmlInputElement>().ok());
