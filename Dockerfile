@@ -10,7 +10,6 @@ FROM chef as builder
 COPY --from=planner /app/recipe.json recipe.json
 COPY Cargo.* /app/
 RUN cargo chef cook --recipe-path recipe.json --release
-RUN wget -qO- https://github.com/thedodd/trunk/releases/download/v0.16.0/trunk-x86_64-unknown-linux-gnu.tar.gz | tar -xzf- && mv trunk /bin
-RUN cargo install --locked wasm-bindgen-cli
+RUN cargo install --locked trunk wasm-bindgen-cli
 COPY src /app/src
 RUN trunk build --release
