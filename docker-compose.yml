@@ -3,8 +3,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
-      target: develop
+      dockerfile: Dockerfile_dev
     volumes:
       - type: bind
         source: "."
