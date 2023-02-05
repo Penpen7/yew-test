@@ -11,5 +11,5 @@ COPY --from=planner /app/recipe.json recipe.json
 COPY Cargo.* /app/
 RUN cargo chef cook --recipe-path recipe.json --release
 RUN cargo install --locked trunk wasm-bindgen-cli
-COPY src /app/src
+COPY . /app
 RUN trunk build --release
