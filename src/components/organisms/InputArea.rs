@@ -1,10 +1,11 @@
+use crate::models::{Message, TodoModel};
 use wasm_bindgen::JsCast;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq)]
 pub struct InputAreaProps {
-    pub on_add: Callback<String>,
+    pub on_add: Callback<Message>,
 }
 
 #[function_component]
@@ -27,7 +28,7 @@ pub fn InputArea(props: &InputAreaProps) -> Html {
     html! {
         <>
             <input type="text" value={(*title).clone()} onchange={on_changed}/>
-            <button onclick={move|_:MouseEvent| on_add.emit((*title).clone())}>{"追加する"}</button>
+            <button onclick={move|_:MouseEvent| on_add.emit(Message::New(TodoModel::new((*title).clone())))}>{"追加する"}</button>
         </>
     }
 }
