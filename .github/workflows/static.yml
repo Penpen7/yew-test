@@ -33,7 +33,7 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: docker build
-        run: docker build -t yew-test:latest
+        run: docker build -t yew-test:latest .
       - name: docker copy
         run: |
           CONTAINER_ID=`docker create yew-test:latest`
