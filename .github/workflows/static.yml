@@ -37,7 +37,6 @@ jobs:
       - name: docker copy
         run: |
           CONTAINER_ID=`docker create yew-test:latest`
-          docker run $CONTAINER_ID
           mkdir dist
           docker cp $CONTAINER_ID:/app/dist dist
       - name: Upload artifact
