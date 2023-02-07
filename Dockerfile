@@ -13,4 +13,4 @@ RUN rustup target add wasm32-unknown-unknown
 RUN cargo chef cook --recipe-path recipe.json --release
 RUN cargo install --locked trunk wasm-bindgen-cli
 COPY . /app
-RUN trunk build --release yew-test
+RUN trunk build --release --public-url yew-test
